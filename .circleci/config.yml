@@ -26,17 +26,30 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
       
       - run:
-          name: Unit testing
-          command: |
-              mkdir test-results
-              cd test-results
-              mkdir jest
-              cd ..
-              npm run test:coverage
-              cp ~/fivestarratingservice/coverage/clover.xml ~/fivestarratingservice/test-results/jest/
-      
+          name: "JavaScript Linter"
+          command: yarn lint -- --format junit -o reports/junit/js-lint-results.xml
+      - run:
+          name: "JavaScript Test Suite"
+          environment:
+            JEST_JUNIT_OUTPUT: reports/junit/js-test-results.xml
+          command: yarn test -- --ci --testResultsProcessor="jest-junit"
       - store_test_results:
-          path: test-results/
+          path: reports/junit
+      - store_artifacts:
+          path: reports/junit
+
+      # - run:
+      #     name: Unit testing
+      #     command: |
+      #         mkdir test-results
+      #         cd test-results
+      #         mkdir jest
+      #         cd ..
+      #         npm run test:coverage
+      #         cp ~/fivestarratingservice/coverage/clover.xml ~/fivestarratingservice/test-results/jest/
+      
+      # - store_test_results:
+      #     path: test-results/
 
 workflows:
   version: 2

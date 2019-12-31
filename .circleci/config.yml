@@ -4,7 +4,7 @@ jobs:
     working_directory: ~/fivestarratingservice
 
     docker:
-      - image: circleci/openjdk:13.0.1-buster
+      - image: circleci/node:7.10
       - image: circleci/mongo:3
 
     steps:

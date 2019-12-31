@@ -1,7 +1,6 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/fivestarrating
     docker:
          - image: circleci/node:7.10
     steps:

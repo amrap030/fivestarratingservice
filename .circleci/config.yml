@@ -26,8 +26,7 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - run:
-          name: "JavaScript Test Suite"
-          # yarn here makes sure we are using the local jest binary
+          name: "Unit Testing"
           command: |
               mkdir test-results
               cd test-results
@@ -39,6 +38,12 @@ jobs:
           path: test-results/
       - store_artifacts:
           path: test-results/
+      
+      - run:
+          name: "Code Coverage"
+          command: npm run test:coverage
+      - store_artifacts:
+          path: coverage/
 
       # - run:
       #     name: Unit testing

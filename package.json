@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "istanbul cover"
   },
   "repository": {
     "type": "git",
@@ -35,10 +35,12 @@
   "devDependencies": {
     "jest": "^24.9.0",
     "nodemon": "^2.0.1",
-    "nyc": "^14.1.1",
-    "sinon": "^8.0.1"
+    "nyc": "^14.1.1"
   },
   "jest": {
-    "reporters": [ "default", "jest-junit" ]
+    "reporters": [
+      "default",
+      "jest-junit"
+    ]
   }
 }

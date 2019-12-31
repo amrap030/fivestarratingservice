@@ -28,13 +28,17 @@ jobs:
       - run:
           name: "JavaScript Test Suite"
           # yarn here makes sure we are using the local jest binary
-          command: npm test --ci --reporters=default --reporters=jest-junit
-          environment:
-            JEST_JUNIT_OUTPUT: "reports/junit/js-test-results.xml"
+          command: |
+              mkdir test-results
+              cd test-results
+              mkdir jest
+              cd ..
+              npm test --ci --reporters=default --reporters=jest-junit
+              mv ~/fivestarratingservice/junit.xml ~/fivestarratingservice/test-results/jest/
       - store_test_results:
-          path: reports/junit
+          path: test-results/
       - store_artifacts:
-          path: reports/junit
+          path: test-results/
 
       # - run:
       #     name: Unit testing

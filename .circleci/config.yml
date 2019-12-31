@@ -1,59 +1,51 @@
 version: 2
 jobs:
-  build:
+  test:
+    working_directory: ~/fivestarratingservice
+
     docker:
-         - image: circleci/node:7.10
+      - image: circleci/openjdk:13.0.1-buster
+      - image: circleci/mongo:3
+
     steps:
       - checkout
+
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-      - run:
-          name: Install dependencies
+      
+      - run: 
+          name: Installing dependencies  
           command: npm install
+      
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-      - persist_to_workspace:
-          root: .
-          paths:
-            - build
-  test:
-    # Remove if parallelism is not desired
-    parallelism: 2
-    
-    docker:
-        - image: circleci/node:7.10
-        - image: circleci/mongo:3
-    
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
+      
       - run:
-          name: Run tests in parallel
+          name: Unit testing
           command: npm run test:coverage
-
+      
       - store_test_results:
-          path: build/test-results/test
-      - store_artifacts:
-          path: build/test-results/test
-          when: always
-      - store_artifacts:
-          path: build/reports/codecoverage/test/html
-          when: always
+          path: target/surefire-reports
 
 workflows:
   version: 2
-  workflow:
+  test-build-deploy:
     jobs:
-    - build
-    - test:
-        requires:
-          - build
+      - test:
+          filters:
+            branches:
+              ignore:
+      - create-push-image:
+          requires:
+            - test
+      - deploy:
+          requires:
+            - create-push-image
 
 # version: 2
 # jobs:

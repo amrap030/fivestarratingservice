@@ -30,7 +30,7 @@ jobs:
           command: npm run test:coverage
       
       - store_test_results:
-          path: target/surefire-reports
+          path: coverage/
 
 workflows:
   version: 2

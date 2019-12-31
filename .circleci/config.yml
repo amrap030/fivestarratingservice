@@ -53,15 +53,23 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-
-      - run: echo ${GCLOUD_SERVICE_KEY} | base64 --decode -i > ${HOME}/gcloud-service-key.json
       - setup_remote_docker:
           version: 18.06.0-ce
-      - run: gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
-      - run: gcloud auth configure-docker
-      - run: gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-      - run: docker build -t gcr.io/${GOOGLE_PROJECT_ID}/${IMAGE_NAME}:${IMAGE_VERSION} .
-      - run: docker push gcr.io/${GOOGLE_PROJECT_ID}/${IMAGE_NAME}:${IMAGE_VERSION}
+      - run: 
+          name: Authenticate gcloud
+          command: gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+      - run: 
+          name: Authenticate docker
+          command: gcloud auth configure-docker
+      - run: 
+          name: Set gcloud project
+          command: gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+      - run: 
+          name: build docker image
+          command: docker build -t gcr.io/${GOOGLE_PROJECT_ID}/${IMAGE_NAME}:${IMAGE_VERSION} .
+      - run: 
+          name: push docker image to gcr
+          command: docker push gcr.io/${GOOGLE_PROJECT_ID}/${IMAGE_NAME}:${IMAGE_VERSION}
 
 workflows:
   version: 2

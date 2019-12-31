@@ -28,9 +28,9 @@ jobs:
       - run:
           name: Unit testing
           command: |
-              mkdir test-results
+              mkdir test-results/jest
               npm run test:coverage
-              cp ~/fivestarratingservice/coverage/clover.xml ~/fivestarratingservice/test-results/
+              cp ~/fivestarratingservice/coverage/clover.xml ~/fivestarratingservice/test-results/jest/
       
       - store_test_results:
           path: test-results/

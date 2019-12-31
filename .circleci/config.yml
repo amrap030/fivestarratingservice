@@ -5,10 +5,6 @@ jobs:
 
     docker:
         - image: circleci/node:7.10
-        - image: circleci/mongo:latest
-        #environment:
-         # POSTGRES_USER: root
-          #POSTGRES_DB: quotes
 
     steps:
       - checkout

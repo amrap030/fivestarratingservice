@@ -45,18 +45,23 @@ jobs:
       - store_artifacts:
           path: coverage/
 
-      # - run:
-      #     name: Unit testing
-      #     command: |
-      #         mkdir test-results
-      #         cd test-results
-      #         mkdir jest
-      #         cd ..
-      #         npm run test:coverage
-      #         cp ~/fivestarratingservice/coverage/clover.xml ~/fivestarratingservice/test-results/jest/
-      
-      # - store_test_results:
-      #     path: test-results/
+  build-and-push-image:
+    docker:
+      - image: google/cloud-sdk
+
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+
+      - run: echo ${GCLOUD_SERVICE_KEY} | base64 --decode -i > ${HOME}/gcloud-service-key.json
+      - setup_remote_docker:
+          version: 18.06.0-ce
+      - run: gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+      - run: gcloud auth configure-docker
+      - run: gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+      - run: docker build -t gcr.io/${GOOGLE_PROJECT_ID}/${IMAGE_NAME}:${IMAGE_VERSION} .
+      - run: docker push gcr.io/${GOOGLE_PROJECT_ID}/${IMAGE_NAME}:${IMAGE_VERSION}
 
 workflows:
   version: 2
@@ -66,12 +71,12 @@ workflows:
           filters:
             branches:
               ignore:
-      - create-push-image:
+      - build-and-push-image:
           requires:
             - test
       - deploy:
           requires:
-            - create-push-image
+            - build-and-push-image
 
 # version: 2
 # jobs:

@@ -1,11 +1,3 @@
-const tracing = require('@opencensus/nodejs');
-const { StackdriverTraceExporter } = require('@opencensus/exporter-stackdriver');
-
-// Add your project id to the Stackdriver options
-const exporter = new StackdriverTraceExporter({projectId: "projektxy"});
-
-tracing.registerExporter(exporter).start();
-
 const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
 const pino = require('pino');
@@ -21,7 +13,7 @@ require('@google-cloud/trace-agent').start();
 require('@google-cloud/debug-agent').start({
     serviceContext: {
       service: 'fivestarratingservice',
-      version: 'VERSION'
+      version: '1.0.0'
     }
 });
 

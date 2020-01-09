@@ -98,7 +98,7 @@ jobs:
       - run: gcloud --quiet container clusters get-credentials ${GCP_CLUSTER}
       - run:
           name: deploy to GKE
-          command: kubectl apply -f ./kubernetes-manifests/**.yaml
+          command: kubectl apply -f ./kubernetes-manifests/fivestarratingservice.yaml
 
 workflows:
   version: 2
